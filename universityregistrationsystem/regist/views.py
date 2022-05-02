@@ -27,7 +27,6 @@ def index(req):
 def adminLogin(req):
     
     isFailed=req.GET.get("fail",False) #Check the value of the GET parameter "fail"
-    print(isFailed)
     loginForm=UserLoginForm() #Use Django Form object to create a blank form for the HTML page
 
     return render(req,'loginIndex.html',{"login_form":loginForm,"action_fail":isFailed})
@@ -57,12 +56,8 @@ def aLogin(req):
     #Retrieve data from the request body
     username=req.POST["username"]
     password=req.POST["password"]
-    print(username)
-    print(password)
     resultAdmin=run_statement(f"SELECT * FROM DatabaseManager WHERE adminname='{username}' and password=SHA2('{password}',256);") #Run the query in DB
-    print(resultAdmin)
     if resultAdmin: #If a result is retrieved
-        print("BURADA MISIN!")
         req.session["username"]=username #Record username into the current session
         return HttpResponseRedirect('../regist/adminHome') #Redirect user to home page
     else:
@@ -74,10 +69,8 @@ def sLogin(req):
     
     
     resultStudent=run_statement(f"SELECT * FROM Student WHERE username='{username}' and password=SHA2('{password}',256);") #Run the query in DB
-    print(resultStudent)
     
     if resultStudent:
-        print("STUDENT")
         req.session["username"]=username #Record username into the current session
         return HttpResponseRedirect('../regist/stHome') #Redirect user to home page
     else:
@@ -89,11 +82,9 @@ def iLogin(req):
     
     
     resultInstructor=run_statement(f"SELECT * FROM Instructor WHERE username='{username}' and password=SHA2('{password}',256);") #Run the query in DB
-    print(resultInstructor)
     
     
     if resultInstructor:
-        print("INSTRUCTOR")
         req.session["username"]=username #Record username into the current session
         return HttpResponseRedirect('../regist/insHome') #Redirect user to home page
     else:
@@ -111,8 +102,9 @@ def adminStudent(req):
     result=run_statement(f"SELECT username, name, surname, email, departmentid, gpa, completedCredits FROM Student ORDER BY completedCredits ASC;") #Run the query in DB
     username=req.session["username"] #Retrieve the username of the logged-in user
     isFailed=req.GET.get("fail",False) #Try to retrieve GET parameter "fail", if it's not given set it to False
+    isFailedx=req.GET.get("failx",False) #Try to retrieve GET parameter "failx", if it's not given set it to False
 
-    return render(req,'adminStudent.html',{"results":result,"action_fail":isFailed,"username":username})
+    return render(req,'adminStudent.html',{"results":result,"action_fail":isFailed,"action_failx":isFailedx,"username":username})
 
 def adminInstructor(req):
     result=run_statement(f"SELECT username, name, surname, email, departmentid, title FROM Instructor;") #Run the query in DB
@@ -143,13 +135,9 @@ def addStudent(req):
     email= req.POST["email"]
     password=req.POST["st_password"] 
     departmentid=req.POST["departmentid"]
-    
     try:
-        print("selam")
         studentid=req.POST["studentid"]
-        print("selams")
         run_statement(f"CALL AddStudent('{username}','{studentid}','{name}','{surname}','{email}','{password}','{departmentid}')")
-        print("selamx")
         return HttpResponseRedirect("../adminHome/Student")
 
     except Exception as e:
@@ -178,6 +166,10 @@ def addInstructor(req):
 def deleteStudent(req):
     #Retrieve data from the request body
     studentid=req.POST["studentid"]
+    temp_result=run_statement(f"SELECT * FROM Student WHERE Student.studentId='{studentid}'")
+    if not temp_result:
+        return HttpResponseRedirect('../adminHome/Student?failx=true')
+
     try:
         run_statement(f"CALL DeleteFromStudent('{studentid}')")
         return HttpResponseRedirect("../adminHome/Student")
@@ -189,8 +181,12 @@ def updateTitleOfInstructor(req):
     #Retrieve data from the request body
     username=req.POST["ins_username"]
     title=req.POST["title"]
-    print(username)
-    print(title)
+
+    temp_result=run_statement(f"SELECT * FROM Instructor WHERE Instructor.username='{username}'")
+    if not temp_result:
+        return HttpResponseRedirect('../adminHome/Instructor?failx=true')
+
+    
     try:
         run_statement(f"CALL UpdateTitleOfInstructor('{username}','{title}')")
         return HttpResponseRedirect("../adminHome/Instructor")
@@ -274,12 +270,6 @@ def addCourse(req):
     quota=req.POST["quota"]
     
     try:
-        print(courseId)
-        print(name)
-        print(credits)
-        print(classroomId)
-        print(slotNumber)
-        print(quota)
         run_statement(f"CALL AddCourse('{username}','{courseId}','{name}','{credits}','{classroomId}','{slotNumber}','{quota}')")
         return HttpResponseRedirect("../Course")
 
@@ -293,8 +283,7 @@ def addPreReq(req):
     courseId=req.POST["courseid"]
     prereqId=req.POST["prereqid"]
     try:
-        print(courseId)
-        print(prereqId)
+
         run_statement(f"CALL AddPreReq('{courseId}','{prereqId}')")
         return HttpResponseRedirect("../Course")
 
@@ -307,8 +296,12 @@ def updateNameOfCourse(req):
     #Retrieve data from the request body
     courseId=req.POST["courseid"]
     name=req.POST["name"]
-    print(courseId)
-    print(name)
+
+    temp_result=run_statement(f"SELECT * FROM Course WHERE Course.courseId='{courseId}'")
+    if not temp_result:
+        return HttpResponseRedirect('../Course?faily=true')
+
+
     try:
         run_statement(f"CALL UpdateNameOfCourse('{courseId}','{name}')")
         return HttpResponseRedirect("../Course")
@@ -336,17 +329,19 @@ def giveGrade(req):
     studentId=req.POST["studentid"]
     grade=req.POST["grade"]
     temp_studentUsername=run_statement(f"SELECT Student.username FROM Student WHERE '{studentId}'=Student.studentId")
-    print("TEMPSTUDENT",temp_studentUsername)
+    if not temp_studentUsername:
+        return HttpResponseRedirect('../Student?failx=true')
+
     studentUsername=str(temp_studentUsername)
-    print(studentUsername)
     temp=studentUsername[3:-5]
-    print(temp)
     
+    
+    temp_result=run_statement(f"SELECT * FROM Course WHERE Course.courseId='{courseId}'")
+    if not temp_result:
+        return HttpResponseRedirect('../Student?failx=true')
     
     try:
-        print(courseId)
-        print(studentId)
-        print(grade)
+
         run_statement(f"CALL GiveGrade('{courseId}','{temp}', '{grade}')")
         return HttpResponseRedirect("../Student")
 
@@ -424,12 +419,9 @@ def stAllCourses(req):
         minCredits = False
         maxCredits = False
 
-    print(keyword)
-    print(xdepartmentId)
 
     if(keyword and xdepartmentId):
         result=run_statement(f"CALL FilterWithKeyword('{keyword}','{xdepartmentId}','{xcampus}', '{minCredits}', '{maxCredits}')") #Run the query in DB
-        print(result)
         if not result:
             if filteredChanged:
                 # xdepartmentId=temp_departmentId
@@ -463,7 +455,6 @@ def stAllCourses(req):
     return render(req,'stAllCourses.html',{"results":result,"keyword_fail":isKeywordFailed,"filtered_fail":isFilteredFailed,"username":username})
 
 def stMyCourses(req):
-    result=run_statement(f"SELECT Grades.courseID, Course.name, Grades.grade FROM (Grades INNER JOIN Course ON Grades.courseId=Course.courseId);") #Run the query in DB
     username=req.session["username"] #Retrieve the username of the logged-in user
     isFailed=req.GET.get("fail",False) #Try to retrieve GET parameter "fail", if it's not given set it to False
     result=run_statement(f"SELECT Grades.courseID, Course.name, Grades.grade FROM (Grades INNER JOIN Course ON Grades.courseId=Course.courseId) WHERE Grades.username='{username}';") #Run the query in DB
@@ -474,7 +465,6 @@ def stAddCourse(req):
     #Retrieve data from the request body
     courseId=req.POST["courseid"]
     username=req.session["username"] #Retrieve the username of the logged-in user
-    print(courseId)
     try:
         run_statement(f"CALL StAddCourse('{username}','{courseId}')")
         return HttpResponseRedirect("../stHome/stMyCourses")
