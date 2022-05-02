@@ -36,6 +36,9 @@ USE `university_registration_system`;
 """
 
 2)In terminal run: cd universityregistrationsystem/regist
+
 3)In terminal run: python3 create_db.py
+
 4)In terminal run: cd ..
+
 5)In terminal run: python3 manage.py runserver
