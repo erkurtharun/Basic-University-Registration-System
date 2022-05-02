@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:teal; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    <div class="container">
+        <table class="center">
+            <colgroup>
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 25%;">
+            </colgroup>
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Classroom ID</th>
+                <th>Time Slot</th>
+                <th>Quota</th>
+                <th>Prerequisite List</th>
+            </tr>
+            {% for row in results %}
+            <tr>
+                {% for value in row %}
+                <td>
+                    {{value}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="center">
+        {% if action_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Course Adding Failed</h4>
+                <p>Cannot add</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'addCourse' %}">
+                {%csrf_token%}
+                <br>
+                <label>Add Course:</label>
+                <br>
+                <input type="text" name="courseid" placeholder="Course ID" required>
+                <br>
+                <input type="text" name="name" placeholder="Name" required>
+                <br>
+                <input type="text" name="credits" placeholder="Credits" required>
+                <br>
+                <input type="text" name="classroomid" placeholder="Classroom ID" required>
+                <br>
+                <input type="text" name="slotNumber" placeholder="Timeslot" required>
+                <br>
+                <input type="text" name="quota" placeholder="Quota" required>
+                <br>
+                <input type="submit" name="submit" value="Add!">
+                <br>
+        </form>
+    </div>
+    <div class="center">
+        {% if action_failx %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Add Prerequisite to a Course Failed.</h4>
+                <p>Cannot add.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'addPreReq' %}">
+                {%csrf_token%}
+                <br>
+                <label>Add Prerequisite to a Course:</label>
+                <br>
+                <input type="text" name="courseid" placeholder="Course ID" required>
+                <br>
+                <input type="text" name="prereqid" placeholder="Course ID of the Pre" required>
+                <br>
+                <input type="submit" name="submit" value="Add!">
+                <br>
+        </form>
+    </div>
+    <div class="center">
+        {% if action_faily %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Update Name of a Course Failed.</h4>
+                <p>Cannot update.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'updateNameOfCourse' %}">
+                {%csrf_token%}
+                <br>
+                <label>Update Name of a Course:</label>
+                <br>
+                <input type="text" name="courseid" placeholder="Course ID" required>
+                <br>
+                <input type="text" name="name" placeholder="Name" required>
+                <br>
+                <input type="submit" name="submit" value="Update!">
+                <br>
+        </form>
+    </div>
+
+    <a href="{%url 'insHome' %}"> <p style="text-align:center">Turn Back</p></a>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:teal; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    <div class="container">
+        <h4>Choose your process.</h4>
+			<div class="d-flex justify-content-around" style="margin-top: 20px">   
+                <a href="../regist/adminHome/Student" class="btn btn-primary">Students</a>   
+                <a href="../regist/adminHome/Instructor" class="btn btn-primary">Instructors</a>     
+                <a href="../regist/adminHome/Grades" class="btn btn-primary">Grades</a>   
+                <a href="../regist/adminHome/Course" class="btn btn-primary">Courses</a>    
+			</div>
+    </div>
+    <a href="{%url 'index' %}"> <p style="text-align:center">Logout</p></a>
+</body>
+</html>

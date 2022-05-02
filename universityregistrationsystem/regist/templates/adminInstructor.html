@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:lavender; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    <div class="container">
+        <table class="center">
+            <colgroup>
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+            </colgroup>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Department ID</th>
+                <th>Title</th>
+
+            </tr>
+            {% for row in results %}
+            <tr>
+                {% for value in row %}
+                <td>
+                    {{value}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="center">
+        {% if action_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Instructor Adding Failed</h4>
+                <p>Cannot add</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'addInstructor' %}">
+                {%csrf_token%}
+                <br>
+                <label>Add Instructor:</label>
+                <br>
+                <input type="text" name="ins_username" placeholder="Username" required>
+                <br>
+                <input type="text" name="title" placeholder="Title" required>
+                <br>
+                <input type="text" name="name" placeholder="Name" required>
+                <br>
+                <input type="text" name="surname" placeholder="Surname" required>
+                <br>
+                <input type="text" name="email" placeholder="Email" required>
+                <br>
+                <input type="text" name="ins_password" placeholder="Password" required>
+                <br>
+                <input type="text" name="departmentid" placeholder="Department ID" required>
+                <br>
+                <input type="submit" name="submit" value="Add Instructor">
+                <br>
+        </form>
+    </div>
+    <div class="center">
+        {% if action_failx %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Title Change Failed.</h4>
+                <p>Cannot change.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'updateTitleOfInstructor' %}">
+                {%csrf_token%}
+                <br>
+                <label>Change Title:</label>
+                <br>
+                <input type="text" name="ins_username" placeholder="Username" required>
+                <br>
+                <input type="text" name="title" placeholder="Title" required>
+                <br>
+                <input type="submit" name="submit" value="Change!">
+                <br>
+        </form>
+    </div>
+    <a href="{%url 'adminHome' %}"> <p style="text-align:center">Turn Back</p></a>
+</body>
+</html>

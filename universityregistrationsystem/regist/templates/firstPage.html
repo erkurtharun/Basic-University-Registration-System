@@ -1,0 +1,29 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<title>Login</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper">
+        <div style="background-color: teal; !important" class="jumbotron text-center bg-primary">
+            <h1> Welcome to RegistrationSystem.</h1>
+            
+        </div>
+	</div>
+	<div class="container">
+		<div class="row">
+            <h4>Choose your role.</h4>
+			<div class="d-flex justify-content-around" style="margin-top: 20px">   
+                <a href="../regist/adminLogin" class="btn btn-primary">Database Manager</a>   
+                <a href="../regist/instructorLogin" class="btn btn-primary">Instructor</a>      
+				<a href="../regist/studentLogin" class="btn btn-primary">Student</a>      
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

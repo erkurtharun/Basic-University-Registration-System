@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:lavender; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    
+    <div class="center">
+        {% if action_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Show Students Failed.</h4>
+                <p>Cannot show.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'showStudents' %}">
+                {%csrf_token%}
+                <br>
+                <label>Show Students:</label>
+                <br>
+                <input type="text" name="courseid" placeholder="Course ID" required>
+                <br>
+                <input type="submit" name="submit" value="Show!">
+                <br>
+        </form>
+    </div>
+
+    <div class="center">
+        {% if action_failx %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Give Grade to a Student Failed.</h4>
+                <p>Cannot give.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'giveGrade' %}">
+                {%csrf_token%}
+                <br>
+                <label>Give Grade to a Student:</label>
+                <br>
+                <input type="text" name="courseid" placeholder="Course ID" required>
+                <br>
+                <input type="text" name="studentid" placeholder="Student ID" required>
+                <br>
+                <input type="text" name="grade" placeholder="Grade" required>
+                <br>
+                <input type="submit" name="submit" value="Give!">
+                <br>
+        </form>
+    </div>
+    <a href="{%url 'insHome' %}"> <p style="text-align:center">Turn Back</p></a>
+
+</body>
+</html>

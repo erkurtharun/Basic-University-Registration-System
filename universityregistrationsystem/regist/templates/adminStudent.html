@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:teal; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    <div class="container">
+        <table class="center">
+            <colgroup>
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+            </colgroup>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Department ID</th>
+                <th>GPA</th>
+                <th>Completed Credits</th>
+            </tr>
+            {% for row in results %}
+            <tr>
+                {% for value in row %}
+                <td>
+                    {{value}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="center">
+        {% if action_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Student Adding Failed</h4>
+                <p>Cannot add</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'addStudent' %}">
+                {%csrf_token%}
+                <br>
+                <label>Add Student:</label>
+                <br>
+                <input type="text" name="st_username" placeholder="Username" required>
+                <br>
+                <input type="text" name="studentid" placeholder="Student ID" required>
+                <br>
+                <input type="text" name="name" placeholder="Name" required>
+                <br>
+                <input type="text" name="surname" placeholder="Surname" required>
+                <br>
+                <input type="text" name="email" placeholder="Email" required>
+                <br>
+                <input type="text" name="st_password" placeholder="Password" required>
+                <br>
+                <input type="text" name="departmentid" placeholder="Department ID" required>
+                <br>
+                <input type="submit" name="submit" value="Add!">
+                <br>
+        </form>
+    </div>
+    <div class="center">
+        {% if action_failx %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Delete Student Failed.</h4>
+                <p>Cannot delete.</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'deleteStudent' %}">
+                {%csrf_token%}
+                <br>
+                <label>Delete Student:</label>
+                <br>
+                <input type="text" name="studentid" placeholder="Student ID" required>
+                <br>
+                <input type="submit" name="submit" value="Delete!">
+                <br>
+        </form>
+    </div>
+    <a href="{%url 'adminHome' %}"> <p style="text-align:center">Turn Back</p></a>
+
+</body>
+</html>

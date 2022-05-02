@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  	<title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        table, th, td {
+            border: 1px solid;
+        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
+        }
+        form { 
+            margin: 0 auto; 
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="background-color:teal; !important" class="jumbotron text-center bg-primary">
+            <h2> Welcome back {{username}}.</h2>
+    </div>
+    <div class="container">
+        <table class="center">
+            <colgroup>
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 25%;">
+            </colgroup>
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Instructor Surname</th>
+                <th>Department</th>
+                <th>Credits</th>
+                <th>Classroom ID</th>
+                <th>Time Slot</th>
+                <th>Quota</th>
+                <th>Prerequisite List</th>
+            </tr>
+            {% for row in results %}
+            <tr>
+                {% for value in row %}
+                <td>
+                    {{value}}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="center">
+        {% if keyword_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">No Result for Keyword</h4>
+                <p>Cannot find any result!</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'stAllCourses' %}">
+                {%csrf_token%}
+                <br>
+                <label>Search Keyword</label>
+                <br>
+                <input type="text" name="keyword" placeholder="Keyword" required>
+                <br>
+                <input type="submit" name="submit" value="Search!">
+                <br>
+        </form>
+    </div>
+
+    <div class="center">
+        {% if filtered_fail %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">No Result for Filtering</h4>
+                <p>Cannot find any result!</p>
+            </div>
+         {% endif %}
+        <form id="postform" class="form-group" method="POST" action="{%url 'stAllCourses' %}">
+                {%csrf_token%}
+                <br>
+                <label>Filter</label>
+                <br>
+                <input type="text" name="departmentid" placeholder="Department ID" required>
+                <br>
+                <input type="text" name="campus" placeholder="Campus" required>
+                <br>
+                <input type="text" name="mincredits" placeholder="Min Credits" required>
+                <br>
+                <input type="text" name="maxcredits" placeholder="Max Credits" required>
+                <br>
+                <input type="submit" name="submit" value="Filter!">
+                <br>
+        </form>
+    </div>
+    <form action="{%url 'stAllCourses' %}" method="post">
+        {%csrf_token%}
+        <input type="submit" name="refresh" value="Refresh!" />
+    </form>
+    <a href="{%url 'stHome' %}"> <p style="text-align:center">Turn Back</p></a>
+</body>
+</html>
